@@ -2,9 +2,10 @@ from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView
 from django.core.mail import send_mail
+from django.views.decorators.http import require_POST
 
 from .models import Post
-from .forms import EmailPostForm
+from .forms import EmailPostForm, CommentForm
 
 def post_share(request, post_id):
     # Retrieve post by id
@@ -98,4 +99,33 @@ def post_detail(request, year, month, day, post):
         'blog/post/detail.html',
         {'post': post}
     )
+
+@require_POST   # Only allow POST requests for this view
+def post_comment(request, post_id):
+    post = get_object_or_404(
+        Post,
+        id=post_id,
+        status=Post.Status.PUBLISHED
+    )
+    comment=None # if the form is invalid, the if statement is skipped and the empty comment object still rendered.
+
+    # A comment was posted
+    form = CommentForm(data=request.POST)
+    if form.is_valid():
+        # Creating a comment object but not yet storing it in database
+        comment = form.save(commit=False)
+        # Assign the post to the comment
+        comment.post = post
+        # NOW... saving the comment to the database
+        comment.save()
+    return render(
+        request,
+        'blog/post/comment.html',
+        {
+            'post':post,
+            'form':form,
+            'comment':comment
+        }
+    )
+
 
