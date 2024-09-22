@@ -6,6 +6,7 @@ from django.views.decorators.http import require_POST
 
 from .models import Post
 from taggit.models import Tag
+from django.db.models import Count
 from .forms import EmailPostForm, CommentForm
 
 def post_share(request, post_id):
@@ -109,6 +110,17 @@ def post_detail(request, year, month, day, post):
     # Form for users to comment
     form = CommentForm()
 
+    # List of similar posts
+    post_tags_ids = post.tags.values_list('id', flat=True)  #returns a list of tag ids for current post
+
+    similar_posts = Post.published.filter(  # returns a list of posts with ids existing in the above list 
+        tags__in=post_tags_ids
+    ).exclude(id=post.id)
+
+    similar_posts = similar_posts.annotate(     # adds a same_tags attribute to each post
+        same_tags=Count('tags')                 # annotate() is chained to filter() above
+    ).order_by('-same_tags', '-publish')[:4]
+
 
     return render(
         request,
@@ -116,8 +128,8 @@ def post_detail(request, year, month, day, post):
         {
             'post': post,
             "comments":comments,
-            "form": form
-            
+            "form": form,
+            "similar_posts": similar_posts
         }
     )
 
