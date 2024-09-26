@@ -1,9 +1,5 @@
 # Django Blog Application
 
-# TODO
-
-Add DockerFile and Dockercompose
-
 This is a full-featured blog web application built using **Django**, with multiple functionalities that showcase my skills in web development, database management, and advanced search features. The project includes post management, commenting, tagging, search, and an admin panel for managing the blog content.
 
 ## Key Features
@@ -111,4 +107,10 @@ Copy code
     Copy code
     
     `python manage.py runserver`
-    
+
+
+
+
+# TODO
+
+Add DockerFile and Dockercompose
