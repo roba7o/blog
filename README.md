@@ -32,16 +32,6 @@ This is a full-featured blog web application built using **Django**, with multip
 - **Canonical URLs**: Ensures each post has a canonical URL for better SEO.
 - **Similar Posts**: Related posts are suggested at the end of each blog post, based on similar tags.
 
-## URLs & Views
-
-The following URL patterns are defined to manage the blog's different views:
-
-python
-
-Copy code
-
-`urlpatterns = [     path('', views.post_list, name='post_list'),     path('tag/<slug:tag_slug>/', views.post_list, name='post_list_by_tag'),     path('<int:year>/<int:month>/<int:day>/<slug:post>/', views.post_detail, name='post_detail'),     path('<int:post_id>/share/', views.post_share, name='post_share'),     path('<int:post_id>/comment/', views.post_comment, name='post_comment'),     path('feed/', LatestPostsFeed(), name='post_feed'),     path('search/', views.post_search, name='post_search'), ]`
-
 ## Admin Panel
 
 - The Django **admin interface** allows for easy management of posts, comments, and tags.
