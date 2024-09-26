@@ -3,7 +3,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView
 from django.core.mail import send_mail
 from django.views.decorators.http import require_POST
-from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
+from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank, TrigramSimilarity
 
 from .models import Post
 from taggit.models import Tag
@@ -177,11 +177,14 @@ def post_search(request):
             search_query = SearchQuery(query)
             results = (
                 Post.published.annotate(
-                    search=search_vector,
-                    rank=SearchRank(search_vector, search_query)
+                    # search=search_vector,
+                    # rank=SearchRank(search_vector, search_query)
+                    similarity = TrigramSimilarity('title', query)
                 )
-                .filter(rank__gte=0.3)
-                .order_by('-rank')
+                # .filter(rank__gte=0.3)
+                # .order_by('-rank')
+                .filter(similarity__gt=0.1)
+                .order_by('-similarity')
             )
     return render(
         request,
