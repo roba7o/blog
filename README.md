@@ -108,9 +108,3 @@ Copy code
     
     `python manage.py runserver`
     
-
-## Future Enhancements
-
-- **User Authentication**: Plan to integrate user registration and login for a more personalized experience.
-- **Improved Comment Moderation**: Admin features for moderating comments.
-- **Enhanced SEO Features**: Implementing more meta tags and structured data for SEO optimization.
